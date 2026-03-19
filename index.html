@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صانع بطاقات العيد</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kufam:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Kufam:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    
+    <style>
+    .site-header {
+    display: flex;
+    justify-content: space-between; /* لتوزيع العناصر يمين ووسط ويسار */
+    align-items: center;
+    background-color: white;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.header-right {
+    flex: 1;
+    text-align: right;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.header-center {
+    flex: 1;
+    text-align: center;
+}
+
+.header-center img {
+    width: 50px; /* مقاس صورة الحساب */
+    height: 50px;
+    border-radius: 20%; /* لجعل الصورة دائرية */
+    border: 2px solid var(--gold);
+    object-fit: cover;
+}
+
+.header-left {
+    flex: 1; /* لضمان بقاء الصورة في المنتصف تماماً */
+}
+
+/* تعديل بسيط للجوال */
+@media (max-width: 480px) {
+    .header-right { font-size: 14px; }
+    .header-center img { width: 40px; height: 40px; }
+}
+
+        :root { --gold: #d4af37; --primary: #2c3e50; --success: #27ae60; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8f9fa; margin: 0; padding: 20px; direction: rtl; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
+        
+        /* القسم العلوي: الإدخال */
+        .top-section { margin-bottom: 20px; }
+        input[type="text"] { width: 90%; padding: 15px; border: 2px solid #eee; border-radius: 12px; font-size: 18px; font-family: 'Tajawal'; outline: none; margin-bottom: 10px; transition: 0.3s; text-align: center; }
+        input[type="text"]:focus { border-color: var(--gold); }
+        .btn-draw { background-color: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 10px; cursor: pointer; font-family: 'Tajawal'; font-weight: bold; width: 95%; }
+
+        /* معرض القوالب */
+        .templates-wrapper { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
+        .template-card { cursor: pointer; border-radius: 8px; overflow: hidden; border: 3px solid transparent; transition: 0.2s; }
+        .template-card.active { border-color: var(--gold); transform: scale(1.05); }
+        .template-card img { width: 100%; height: auto; object-fit: cover; display: block; }
+
+        /* منطقة البطاقة */
+        canvas { width: 100%; height: auto; border-radius: 15px; border: 1px solid #eee; margin-top: 10px; }
+
+        /* زر التحميل في الأسفل */
+        .bottom-section { margin-top: 20px; }
+        .btn-download { background-color: var(--success); color: white; border: none; padding: 15px 30px; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; font-family: 'Tajawal'; }
+        
+        h2 { margin-top: 0; color: var(--primary); }
+        .header-right a {
+    color: #27A9FF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* اختياري: تغيير اللون عند مرور الماوس فوق الاسم */
+.header-right a:hover {
+    color: #2c3e50;
+}
+        .note { font-size: 12px; color: #7f8c8d; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="site-header">
+    <div class="header-right">
+        <a href="https://x.com/fa_jd8"><span>@fa_jd8</span></a> </div>
+    <div class="header-center">
+        <a href="https://x.com/fa_jd8"><img src="profile.jpg" alt="Profile"></a> </div>
+    <div class="header-left">
+        </div>
+</div>
+
+
+
+<div class="container">
+    <div class="top-section">
+        <h2>مصمم بطاقات العيد 🌙</h2>
+        <input type="text" id="userName" placeholder="اكتب الاسم هنا..." maxlength="25">
+        <button class="btn-draw" onclick="draw()">إنشاء 🚀</button>
+    </div>
+
+    <div class="templates-wrapper">
+        <div class="template-card active" onclick="selectTemplate(0, this)"><img src="card1.png"></div>
+        <div class="template-card" onclick="selectTemplate(1, this)"><img src="card2.png"></div>
+        <div class="template-card" onclick="selectTemplate(2, this)"><img src="card3.png"></div>
+        <div class="template-card" onclick="selectTemplate(3, this)"><img src="card4.png"></div>
+    </div>
+
+    <canvas id="cardCanvas" width="1080" height="1920"></canvas>
+
+    <div class="bottom-section">
+        <button class="btn-download" onclick="download()">تحميل البطاقة 📥</button>
+    </div>
+    <p class="note">* لاتنسون والدي من دعواتكم .</p>
+</div>
+
+<script>
+    const canvas = document.getElementById('cardCanvas');
+    const ctx = canvas.getContext('2d');
+    const nameInput = document.getElementById('userName');
+
+    const configs = [
+        { src: 'card1.png', y: 1750, color: '#f6eada', size: 55, fontName: "Amiri" },
+        { src: 'card2.png', y: 1305, color: '#6d7644', size: 60, fontName: "Tajawal" },
+        { src: 'card3.png', y: 1276, color: '#7d695c', size: 40, fontName: "Kufam" },
+        { src: 'card4.png', y: 1338, color: '#8b6b58', size: 60, fontName: "Amiri"}
+    ];
+
+    let currentConfig = configs[0];
+    let activeImg = new Image();
+
+    window.onload = () => loadImg(configs[0].src);
+
+    function selectTemplate(index, element) {
+        document.querySelectorAll('.template-card').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+        currentConfig = configs[index];
+        loadImg(currentConfig.src);
+    }
+
+    function loadImg(url) {
+        activeImg = new Image();
+        activeImg.crossOrigin = "anonymous";
+        activeImg.src = url;
+        activeImg.onload = draw;
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(activeImg, 0, 0, canvas.width, canvas.height);
+
+        const text = nameInput.value.trim();
+        if (text) {
+            ctx.fillStyle = currentConfig.color;
+            ctx.textAlign = "center";
+            ctx.font = `bold ${currentConfig.size}px ${currentConfig.fontName}`;
+            ctx.shadowColor = "rgba(0,0,0,0.1)";
+            ctx.shadowBlur = 4;
+            ctx.fillText(text, canvas.width / 2, currentConfig.y);
+        }
+    }
+
+    function download() {
+        const link = document.createElement('a');
+        link.download = 'Eid_Card.png';
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    }
+</script>
+
+</body>
+</html>
